@@ -5,7 +5,7 @@ Dijkstra's algorithm, and A* using a Sri Lankan road network.
 
 ## Current stage
 
-Implementing breadth-first search over the sample road network.
+Automated testing of the graph and BFS implementation.
 
 ## Documentation
 
@@ -43,3 +43,12 @@ of edges. It does not use road distances when choosing a path.
 
 ```bash
 python main.py
+
+## Testing
+
+The project uses pytest for automated testing.
+
+Run the full test suite with:
+
+```bash
+python -m pytest
