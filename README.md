@@ -5,7 +5,7 @@ Dijkstra's algorithm, and A* using a Sri Lankan road network.
 
 ## Current stage
 
-Implementing the core undirected weighted graph data structure.
+Implementing breadth-first search over the sample road network.
 
 ## Documentation
 
@@ -31,6 +31,13 @@ Implementing the core undirected weighted graph data structure.
 - Command-line interface
 - Map visualisation
 - Real road-network integration
+
+## Implemented algorithms
+
+### Breadth-First Search (BFS)
+
+BFS searches the graph level by level and finds paths with the fewest number
+of edges. It does not use road distances when choosing a path.
 
 ## Running the project
 
