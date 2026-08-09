@@ -39,4 +39,19 @@ def build_sample_graph() -> Graph:
     for town_a, town_b, distance in roads:
         graph.add_road(town_a, town_b, distance)
 
+    coordinates = {
+        "Colombo": (6.93, 79.85),
+        "Kaduwela": (6.93, 79.98),
+        "Malabe": (6.90, 79.96),
+        "Kottawa": (6.84, 79.96),
+        "Homagama": (6.84, 80.00),
+        "Avissawella": (6.95, 80.21),
+        "Ratnapura": (6.68, 80.40),
+        "Kegalle": (7.25, 80.35),
+        "Kandy": (7.29, 80.64),
+        "Gampaha": (7.09, 80.00),
+    }
+
+    for town, (latitude, longitude,) in coordinates.items(): graph.set_coordinates(town, latitude, longitude,)
+
     return graph

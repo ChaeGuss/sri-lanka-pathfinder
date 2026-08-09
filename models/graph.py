@@ -4,6 +4,7 @@ class Graph:
     def __init__(self) -> None:
         """Create an empty graph."""
         self._adjacency: dict[str, dict[str, float]] = {}
+        self._coordinates: dict[str, tuple[float, float]] = {}
 
     def add_town(self, town: str) -> None:
         """Add a town to the graph."""
@@ -91,3 +92,35 @@ class Graph:
         """Return a readble summary of the graph"""
         return(f"Graph(towns={self.town_count()}, roads={self.road_count()})")
 
+    def set_coordinates(self, town: str, latitude: float, longitude: float, ) -> None:
+        """Set geographic coordinates for an existing town"""
+        self._require_town(town)
+
+        if isinstance(latitude, bool) or not isinstance(latitude, (int, float), ):
+            raise TypeError("Latitude must be a number")
+
+        if isinstance(longitude, bool) or not isinstance(longitude, (int, float), ):
+            raise TypeError("Longitude must be a number")
+
+        if not -90 <= latitude <= 90:
+            raise ValueError("Latitude must be between -90 and 90 degrees") # Latitude measures north/south angular position, with the Equator at 0° and poles at ±90°
+
+        if not -180 <= longitude <= 180:
+            raise ValueError("Longitude must be between -180 and 180 degrees") # Longitude measures east/west angular position, with the Prime Meridian at 0° and the International Date Line at ±180°
+
+        self._coordinates[town] = (float(latitude), float(longitude), )
+
+    def has_coordinates(self, town: str) -> bool:
+        """Return whether a town has geographic coordinates set"""
+        self._require_town(town)
+
+        return town in self._coordinates
+
+    def get_coordinates(self, town: str, ) -> tuple[float, float]:
+        """Return the latitude and logitude of a town"""
+        self._require_town(town)
+
+        if town not in self._coordinates:
+            raise ValueError(f"Coordinates not stored for town: {town}")
+
+        return self._coordinates[town]

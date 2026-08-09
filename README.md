@@ -5,8 +5,8 @@ Dijkstra's algorithm, and A* using a Sri Lankan road network.
 
 ## Current stage
 
-Implementing and testing weighted shortest-path routing using Dijkstra's
-algorithm.
+Adding geographic coordinates and validating a distance heuristic in
+preparation for A* search.
 
 ## Documentation
 
@@ -32,6 +32,18 @@ algorithm.
 - Command-line interface
 - Map visualisation
 - Real road-network integration
+
+## Geographic coordinates
+
+Sample towns can now store latitude and longitude coordinates.
+
+Coordinates are currently approximate learning data rather than precise
+road-junction locations.
+
+Geographic distance is calculated using a spherical Haversine calculation.
+
+The geographic distance will later be used as the heuristic estimate for
+A* search.
 
 ## Implemented algorithms
 

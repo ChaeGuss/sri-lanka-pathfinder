@@ -94,3 +94,84 @@ def test_sample_graph_has_expected_size() -> None:
 
     assert graph.town_count() == 10
     assert graph.road_count() == 13
+
+def test_set_and_get_coordinates() -> None:
+    graph = Graph()
+
+    graph.add_town("Colombo")
+
+    graph.set_coordinates(
+        "Colombo",
+        6.93,
+        79.85,
+    )
+
+    assert graph.get_coordinates(
+        "Colombo"
+    ) == (6.93, 79.85)
+
+def test_town_initially_has_no_coordinates() -> None:
+    graph = Graph()
+
+    graph.add_town("Colombo")
+
+    assert not graph.has_coordinates("Colombo")
+
+def test_town_has_coordinates_after_setting_them() -> None:
+    graph = Graph()
+
+    graph.add_town("Colombo")
+
+    graph.set_coordinates(
+        "Colombo",
+        6.93,
+        79.85,
+    )
+
+    assert graph.has_coordinates("Colombo")
+
+def test_invalid_latitude_is_rejected() -> None:
+    graph = Graph()
+    graph.add_town("Test")
+
+    with pytest.raises(ValueError):
+        graph.set_coordinates(
+            "Test",
+            100,
+            80,
+        )
+
+def test_invalid_longitude_is_rejected() -> None:
+    graph = Graph()
+    graph.add_town("Test")
+
+    with pytest.raises(ValueError):
+        graph.set_coordinates(
+            "Test",
+            7,
+            200,
+        )
+
+def test_coordinates_require_existing_town() -> None:
+    graph = Graph()
+
+    with pytest.raises(ValueError):
+        graph.set_coordinates(
+            "Unknown",
+            7,
+            80,
+        )
+
+def test_get_coordinates_rejects_missing_coordinates() -> None:
+    graph = Graph()
+
+    graph.add_town("Colombo")
+
+    with pytest.raises(ValueError):
+        graph.get_coordinates("Colombo")
+
+def test_sample_graph_towns_have_coordinates() -> None:
+    graph = build_sample_graph()
+
+    for town in graph.get_towns():
+        assert graph.has_coordinates(town)
