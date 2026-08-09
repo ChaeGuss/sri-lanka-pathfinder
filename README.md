@@ -5,7 +5,8 @@ Dijkstra's algorithm, and A* using a Sri Lankan road network.
 
 ## Current stage
 
-Automated testing of the graph and BFS implementation.
+Implementing and testing weighted shortest-path routing using Dijkstra's
+algorithm.
 
 ## Documentation
 
@@ -38,6 +39,17 @@ Automated testing of the graph and BFS implementation.
 
 BFS searches the graph level by level and finds paths with the fewest number
 of edges. It does not use road distances when choosing a path.
+
+### Dijkstra's Algorithm
+
+Dijkstra's algorithm finds a path with the minimum total edge weight.
+
+In this project, edge weights currently represent simplified road distances
+in kilometres.
+
+Unlike BFS, Dijkstra considers road weights when selecting routes.
+
+The implementation uses Python's `heapq` module as a priority queue.
 
 ## Running the project
 

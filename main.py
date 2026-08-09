@@ -1,6 +1,7 @@
 from data.sample_network import build_sample_graph
 from algorithms.bfs import bfs
 from algorithms.path_utils import path_distance
+from algorithms.dijkstra import dijkstra
 
 def main() -> None:
     graph = build_sample_graph()
@@ -8,17 +9,38 @@ def main() -> None:
     start = "Colombo"
     goal = "Kandy"
 
-    path = bfs(graph, start, goal)
+    bfs_path = bfs(graph, start, goal)
+    dijkstra_path = dijkstra(graph, start, goal)
 
-    if path is None:
-        print(f"No route found from {start} to {goal}.")
-        return
+    if bfs_path is not None:
+        print("\nBFS")
+        print("Route:", " -> ".join(bfs_path))
+        print("Edges:", len(bfs_path) - 1)
+        print(
+            "Distance:",
+            path_distance(graph, bfs_path),
+            "km",
+        )
 
-    print("BFS result:")
-    print("Route:", "->".join(path))
-    print("Edges:", len(path) -1)
-    print("Distance:", path_distance(graph, path), "km")
-    
-    
+    if dijkstra_path is not None:
+        print("\nDijkstra")
+        print(
+            "Route:",
+            " -> ".join(dijkstra_path),
+        )
+        print(
+            "Edges:",
+            len(dijkstra_path) - 1,
+        )
+        print(
+            "Distance:",
+            path_distance(
+                graph,
+                dijkstra_path,
+            ),
+            "km",
+        )
+
+
 if __name__ == "__main__":
     main()

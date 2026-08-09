@@ -11,3 +11,16 @@ def path_distance(graph: Graph, path: list[str]) -> float:
         total += graph.get_distance(town_a, town_b)
 
     return total
+
+def reconstruct_path(parents: dict[str, str | None], goal: str, ) -> list[str]:
+    """Reconstruct a path from a parent mapping."""
+    path = []
+    current: str | None = goal
+
+    while current is not None:
+        path.append(current)
+        current = parents[current]
+
+    path.reverse()
+
+    return path

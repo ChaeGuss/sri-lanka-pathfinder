@@ -1,6 +1,7 @@
 from collections import deque
 
 from models.graph import Graph
+from algorithms.path_utils import reconstruct_path
 
 def bfs_traversal(graph: Graph, start: str) -> list[str]:
     """Return towns in breadth-first traversal order."""
@@ -55,23 +56,8 @@ def bfs(graph: Graph, start: str, goal: str) -> list[str] | None:
             queue.append(neighbour)
 
             if neighbour == goal:
-                return _reconstruct_path(parents, goal) # return a real route
+                return reconstruct_path(parents, goal) # return a real route
 
             queue.append(neighbour)
 
     return None  # no path found
-
-def _reconstruct_path(parents: dict[str, str | None],
-                      goal: str,) -> list[str]:
-    """Reconstruct a path from a BFS parent mapping""" 
-
-    path = []
-    current: str | None = goal
-
-    while current is not None:
-        path.append(current)
-        current = parents[current]
-
-    path.reverse()
-
-    return path
