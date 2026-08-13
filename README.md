@@ -5,8 +5,7 @@ Dijkstra's algorithm, and A* using a Sri Lankan road network.
 
 ## Current stage
 
-Adding geographic coordinates and validating a distance heuristic in
-preparation for A* search.
+Implementing A* search and comparing BFS, Dijkstra, and A* behaviour.
 
 ## Documentation
 
@@ -62,6 +61,19 @@ in kilometres.
 Unlike BFS, Dijkstra considers road weights when selecting routes.
 
 The implementation uses Python's `heapq` module as a priority queue.
+
+### A* Search
+
+A* uses both the known road cost from the start and a heuristic estimate of
+the remaining distance to the destination.
+
+The implementation uses:
+
+- `g(n)` for the known road distance from the start
+- `h(n)` for approximate geographic distance to the goal
+- `f(n) = g(n) + h(n)` for priority
+
+The heuristic is calculated using latitude and longitude coordinates.
 
 ## Running the project
 

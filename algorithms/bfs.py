@@ -31,6 +31,8 @@ def bfs_traversal(graph: Graph, start: str) -> list[str]:
 def bfs(graph: Graph, start: str, goal: str) -> list[str] | None:
     """Find a path from start to goal using breadth-first search."""
 
+    explored_nodes = 0
+
     if not graph.has_town(start):
         raise ValueError(f"Unknown start town: {start}")
 
@@ -46,6 +48,9 @@ def bfs(graph: Graph, start: str, goal: str) -> list[str] | None:
 
     while queue:
         current = queue.popleft()
+        explored_nodes += 1
+
+        print("BFS explored:", explored_nodes,)
 
         for neighbour in graph.get_neighbours(current):
             if neighbour in visited:

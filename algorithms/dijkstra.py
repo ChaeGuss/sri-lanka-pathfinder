@@ -16,8 +16,15 @@ def dijkstra(graph: Graph, start: str, goal: str, ) -> list[str] | None:
 
     heapq.heappush(priority_queue, (0.0, start), )   # push the starting town with distance 0 into the priority queue
 
+    explored_nodes = 0
+
     while priority_queue:
         current_distance, current = heapq.heappop(priority_queue)   # pop the town with the smallest distance from the priority queue
+        
+        if current_distance > distances[current]:
+            continue
+
+        explored_nodes += 1
 
         if current == goal:
             return reconstruct_path(parents, goal)
