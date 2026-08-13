@@ -3,6 +3,7 @@ import heapq
 from algorithms.path_utils import reconstruct_path
 from models.graph import Graph
 from utils.geography import geographic_distance
+from models.search_result import SearchResults
 
 def _heuristic(graph: Graph, town: str, goal: str, ) -> float:
     """Estimate remaining distance from a town to the goal"""
@@ -11,7 +12,7 @@ def _heuristic(graph: Graph, town: str, goal: str, ) -> float:
 
     return geographic_distance(town_coordinates, goal_coordinates)
 
-def astar(graph: Graph, start: str, goal: str, ) -> list[str] | None:
+def astar(graph: Graph, start: str, goal: str, ) -> SearchResults:
     """Find a minimum distance path using A* search"""
 
     if not graph.has_town(start):
@@ -21,7 +22,7 @@ def astar(graph: Graph, start: str, goal: str, ) -> list[str] | None:
         raise ValueError(f"Unknown goal town: {goal}")
 
     if start == goal:
-        return [start]
+        return SearchResults(path=[start], explored_nodes=1,)
 
     if not graph.has_coordinates(start):
         raise ValueError(f"No corrdinates stored for start town: {start}")
@@ -43,7 +44,7 @@ def astar(graph: Graph, start: str, goal: str, ) -> list[str] | None:
     explored_nodes = 0
 
     while priority_queue:
-        current_priority, queued_g, current = heapq.heappop(priority_queue)
+        (_, queued_g, current, ) = heapq.heappop(priority_queue)
 
         if queued_g > g_scores[current]:
           continue
@@ -51,7 +52,7 @@ def astar(graph: Graph, start: str, goal: str, ) -> list[str] | None:
         explored_nodes += 1
 
         if current == goal:
-            return reconstruct_path(parents, goal,)
+            return SearchResults(path=reconstruct_path(parents, goal,), explored_nodes=explored_nodes)
 
         for neighbour, road_distance in graph.get_neighbours(current).items():
 
@@ -70,5 +71,5 @@ def astar(graph: Graph, start: str, goal: str, ) -> list[str] | None:
 
                 heapq.heappush(priority_queue, (f_score, candidate_g, neighbour,), )
 
-    return None
+    return SearchResults(path=None, explored_nodes=explored_nodes,)
 

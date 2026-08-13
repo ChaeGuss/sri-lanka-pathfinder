@@ -22,12 +22,13 @@ def test_bfs_traversal_visits_every_sample_town() -> None:
 def test_bfs_finds_colombo_to_kandy_path() -> None:
     graph = build_sample_graph()
 
-    path = bfs(graph, "Colombo", "Kandy")
+    result = bfs(graph, "Colombo", "Kandy")
 
-    assert path is not None
-    assert path[0] == "Colombo"
-    assert path[-1] == "Kandy"
-    assert len(path) - 1 == 3
+    assert result.path is not None
+    assert result.path[0] == "Colombo"
+    assert result.path[-1] == "Kandy"
+    assert len(result.path) - 1 == 3
+    assert result.explored_nodes > 0
 
 def test_bfs_returns_none_when_goal_is_unreachable() -> None:
     graph = Graph()
@@ -38,9 +39,10 @@ def test_bfs_returns_none_when_goal_is_unreachable() -> None:
 
     graph.add_road("A", "B", 5)
 
-    path = bfs(graph, "A", "C")
+    result = bfs(graph, "A", "C")
 
-    assert path is None
+    assert result.path is None
+    assert result.explored_nodes == 2
 
 # Proof BFS finds the path with the fewest edges
 def test_bfs_prefers_fewer_edges_not_lower_distance() -> None:
@@ -55,15 +57,30 @@ def test_bfs_prefers_fewer_edges_not_lower_distance() -> None:
     graph.add_road("A", "C", 1)
     graph.add_road("C", "B", 1)
 
-    path = bfs(graph, "A", "D")
+    result = bfs(graph, "A", "D")
 
-    assert path == ["A", "B", "D"]
+    assert result.path == ["A", "B", "D"]
+
+    assert result.explored_nodes > 0
 
 def test_bfs_can_travel_in_reverse_direction() -> None:
     graph = build_sample_graph()
 
-    path = bfs(graph, "Kandy", "Colombo")
+    result = bfs(graph, "Kandy", "Colombo")
 
-    assert path is not None
-    assert path[0] == "Kandy"
-    assert path[-1] == "Colombo"
+    assert result.path is not None
+    assert result.path[0] == "Kandy"
+    assert result.path[-1] == "Colombo"
+    assert result.explored_nodes > 0
+
+def test_bfs_start_equals_goal() -> None:
+    graph = build_sample_graph()
+
+    result = bfs(
+        graph,
+        "Colombo",
+        "Colombo",
+    )
+
+    assert result.path == ["Colombo"]
+    assert result.explored_nodes == 1

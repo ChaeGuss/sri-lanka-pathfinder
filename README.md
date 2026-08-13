@@ -75,6 +75,29 @@ The implementation uses:
 
 The heuristic is calculated using latitude and longitude coordinates.
 
+Each pathfinding algorithm returns a SearchResult containing:
+
+- the discovered path, or None if unreachable
+- the number of explored nodes
+
+models/
+    data structures
+
+algorithms/
+    pathfinding logic
+
+services/
+    coordinates algorithm execution
+
+utils/
+    shared presentation/geographic helpers
+
+data/
+    sample network
+
+tests/
+    automated correctness checks
+
 ## Running the project
 
 ```bash

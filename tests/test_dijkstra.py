@@ -9,28 +9,32 @@ from algorithms.path_utils import (path_distance, reconstruct_path)
 def test_dijkstra_finds_route() -> None:
     graph = build_sample_graph()
 
-    path = dijkstra(
+    result = dijkstra(
         graph,
         "Colombo",
         "Kandy",
     )
 
-    assert path is not None
-    assert path[0] == "Colombo"
-    assert path[-1] == "Kandy"
+    assert result.path is not None
+    assert result.path[0] == "Colombo"
+    assert result.path[-1] == "Kandy"
+
+    assert result.explored_nodes > 0
 
 def test_dijkstra_finds_minimum_sample_distance() -> None:
     graph = build_sample_graph()
 
-    path = dijkstra(
+    result = dijkstra(
         graph,
         "Colombo",
         "Kandy",
     )
 
-    assert path is not None
+    assert result.path is not None
 
-    assert path_distance(graph, path) == 125.0
+    assert path_distance(graph, result.path) == 125.0
+
+    assert result.explored_nodes > 0
 
 def test_dijkstra_prefers_lower_weight_over_fewer_edges() -> None:
     graph = Graph()
@@ -44,27 +48,31 @@ def test_dijkstra_prefers_lower_weight_over_fewer_edges() -> None:
     graph.add_road("A", "C", 1)
     graph.add_road("C", "B", 1)
 
-    path = dijkstra(graph, "A", "D")
+    result = dijkstra(graph, "A", "D")
 
-    assert path == [
+    assert result.path == [
         "A",
         "C",
         "B",
         "D",
     ]
 
-    assert path_distance(graph, path) == 102.0
+    assert path_distance(graph, result.path) == 102.0
+
+    assert result.explored_nodes > 0
 
 def test_dijkstra_start_equals_goal() -> None:
     graph = build_sample_graph()
 
-    path = dijkstra(
+    result = dijkstra(
         graph,
         "Colombo",
         "Colombo",
     )
 
-    assert path == ["Colombo"]
+    assert result.path == ["Colombo"]
+
+    assert result.explored_nodes > 0
 
 def test_dijkstra_rejects_unknown_start() -> None:
     graph = build_sample_graph()
@@ -95,13 +103,15 @@ def test_dijkstra_returns_none_when_unreachable() -> None:
 
     graph.add_road("A", "B", 5)
 
-    path = dijkstra(
+    result = dijkstra(
         graph,
         "A",
         "C",
     )
 
-    assert path is None
+    assert result.path is None
+
+    assert result.explored_nodes > 0
 
 def test_dijkstra_handles_direct_road() -> None:
     graph = Graph()
@@ -111,10 +121,12 @@ def test_dijkstra_handles_direct_road() -> None:
 
     graph.add_road("A", "B", 7)
 
-    path = dijkstra(graph, "A", "B")
+    result = dijkstra(graph, "A", "B")
 
-    assert path == ["A", "B"]
-    assert path_distance(graph, path) == 7.0
+    assert result.path == ["A", "B"]
+    assert path_distance(graph, result.path) == 7.0
+
+    assert result.explored_nodes > 0
 
 def test_dijkstra_can_improve_previous_distance() -> None:
     graph = Graph()
@@ -126,15 +138,17 @@ def test_dijkstra_can_improve_previous_distance() -> None:
     graph.add_road("A", "C", 10)
     graph.add_road("C", "B", 10)
 
-    path = dijkstra(graph, "A", "B")
+    result = dijkstra(graph, "A", "B")
 
-    assert path == [
+    assert result.path == [
         "A",
         "C",
         "B",
     ]
 
-    assert path_distance(graph, path) == 20.0
+    assert path_distance(graph, result.path) == 20.0
+
+    assert result.explored_nodes > 0
 
 def test_reconstruct_path_from_parents() -> None:
     parents = {

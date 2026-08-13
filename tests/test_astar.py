@@ -9,54 +9,55 @@ from models.graph import Graph
 def test_astar_finds_route() -> None:
     graph = build_sample_graph()
 
-    path = astar(
+    result = astar(
         graph,
         "Colombo",
         "Kandy",
     )
 
-    assert path is not None
-    assert path[0] == "Colombo"
-    assert path[-1] == "Kandy"
+    assert result.path is not None
+    assert result.path[0] == "Colombo"
+    assert result.path[-1] == "Kandy"
+    assert result.explored_nodes > 0
 
 def test_astar_matches_dijkstra_distance() -> None:
     graph = build_sample_graph()
 
-    astar_path = astar(
+    astar_result = astar(
         graph,
         "Colombo",
         "Kandy",
     )
 
-    dijkstra_path = dijkstra(
+    dijkstra_result = dijkstra(
         graph,
         "Colombo",
         "Kandy",
     )
 
-    assert astar_path is not None
-    assert dijkstra_path is not None
+    assert astar_result.path is not None
+    assert dijkstra_result.path is not None
 
     assert path_distance(
         graph,
-        astar_path,
+        astar_result.path,
     ) == pytest.approx(
         path_distance(
             graph,
-            dijkstra_path,
+            dijkstra_result.path,
         )
     )
 
 def test_astar_start_equals_goal() -> None:
     graph = build_sample_graph()
 
-    path = astar(
+    result = astar(
         graph,
         "Colombo",
         "Colombo",
     )
 
-    assert path == ["Colombo"]
+    assert result.path == ["Colombo"]
 
 def test_astar_rejects_unknown_start() -> None:
     graph = build_sample_graph()
@@ -127,10 +128,12 @@ def test_astar_returns_none_when_unreachable() -> None:
         5,
     )
 
-    path = astar(
+    result = astar(
         graph,
         "A",
         "C",
     )
 
-    assert path is None
+    assert result.path is None
+
+    assert result.explored_nodes > 0

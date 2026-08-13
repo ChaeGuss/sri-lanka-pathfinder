@@ -1,19 +1,32 @@
 from data.sample_network import build_sample_graph
-from algorithms.bfs import bfs
-from algorithms.path_utils import path_distance
-from algorithms.dijkstra import dijkstra
-from utils.geography import geographic_distance
-from algorithms.astar import astar
+from services.pathfinder import compare_algorithms
+from utils.display import print_search_result
+
 
 def main() -> None:
+    """Run the Sri Lanka pathfinding application."""
     graph = build_sample_graph()
 
-    path = astar(graph, "Colombo", "Kandy", )
+    start = "Colombo"
+    goal = "Kandy"
 
-    print(path)
+    results = compare_algorithms(
+        graph,
+        start,
+        goal,
+    )
 
-    if path is not None:
-        print(path_distance(graph, path))
-    
+    print(
+        f"Route comparison: {start} -> {goal}"
+    )
+
+    for algorithm_name, result in results.items():
+        print_search_result(
+            algorithm_name,
+            graph,
+            result,
+        )
+
+
 if __name__ == "__main__":
     main()

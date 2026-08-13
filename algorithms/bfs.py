@@ -2,6 +2,7 @@ from collections import deque
 
 from models.graph import Graph
 from algorithms.path_utils import reconstruct_path
+from models.search_result import SearchResults
 
 def bfs_traversal(graph: Graph, start: str) -> list[str]:
     """Return towns in breadth-first traversal order."""
@@ -28,7 +29,7 @@ def bfs_traversal(graph: Graph, start: str) -> list[str]:
     return traversal_order
 
 # path search function using BFS
-def bfs(graph: Graph, start: str, goal: str) -> list[str] | None:
+def bfs(graph: Graph, start: str, goal: str) -> SearchResults:
     """Find a path from start to goal using breadth-first search."""
 
     explored_nodes = 0
@@ -40,17 +41,19 @@ def bfs(graph: Graph, start: str, goal: str) -> list[str] | None:
         raise ValueError(f"Unknown goal town: {goal}")
 
     if start == goal:
-        return [start]
+        return SearchResults(path=[start], explored_nodes=1, )
 
     queue = deque([start])
     visited = {start}
+    explored_nodes = 0
     parents: dict[str, str | None] = {start: None}
 
     while queue:
         current = queue.popleft()
         explored_nodes += 1
 
-        print("BFS explored:", explored_nodes,)
+        if current == goal:
+            return SearchResults(path=reconstruct_path(parents, goal,), explored_nodes=explored_nodes)
 
         for neighbour in graph.get_neighbours(current):
             if neighbour in visited:
@@ -60,9 +63,4 @@ def bfs(graph: Graph, start: str, goal: str) -> list[str] | None:
             parents[neighbour] = current
             queue.append(neighbour)
 
-            if neighbour == goal:
-                return reconstruct_path(parents, goal) # return a real route
-
-            queue.append(neighbour)
-
-    return None  # no path found
+    return SearchResults(path=None, explored_nodes=explored_nodes)

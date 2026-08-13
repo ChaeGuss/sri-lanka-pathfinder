@@ -2,9 +2,26 @@ import heapq
 
 from models.graph import Graph
 from algorithms.path_utils import reconstruct_path
+from models.search_result import SearchResults
 
-def dijkstra(graph: Graph, start: str, goal: str, ) -> list[str] | None:
+def dijkstra(graph: Graph, start: str, goal: str, ) -> SearchResults:
     """Find the minimum distance path from start to goal using Dijkstra's algorithm."""
+
+    if not graph.has_town(start):
+        raise ValueError(
+            f"Unknown start town: {start}"
+        )
+
+    if not graph.has_town(goal):
+        raise ValueError(
+            f"Unknown goal town: {goal}"
+        )
+
+    if start == goal:
+        return SearchResults(
+            path=[start],
+            explored_nodes=1,
+        )
 
     distances = {town: float("inf") for town in graph.get_towns()}
 
@@ -27,7 +44,7 @@ def dijkstra(graph: Graph, start: str, goal: str, ) -> list[str] | None:
         explored_nodes += 1
 
         if current == goal:
-            return reconstruct_path(parents, goal)
+            return SearchResults(path=reconstruct_path(parents, goal,), explored_nodes=explored_nodes, )
 
         for neighbour, road_distance in graph.get_neighbours(current).items():
             candidate_distance = (current_distance + road_distance)   # calculate the distance to the neighbour through the current town
@@ -38,5 +55,5 @@ def dijkstra(graph: Graph, start: str, goal: str, ) -> list[str] | None:
 
                 heapq.heappush(priority_queue, (candidate_distance, neighbour))
 
-    return None
+    return SearchResults(path=None, explored_nodes=explored_nodes,)
 
