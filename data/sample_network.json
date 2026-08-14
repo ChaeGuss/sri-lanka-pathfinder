@@ -1,0 +1,121 @@
+{
+    "towns": [
+        {
+            "name": "Colombo",
+            "latitude": 6.93,
+            "longitude": 79.85
+        },
+        {
+            "name": "Kaduwela",
+            "latitude": 6.93,
+            "longitude": 79.98
+        },
+        {
+            "name": "Malabe",
+            "latitude": 6.90,
+            "longitude": 79.96
+        },
+        {
+            "name": "Kottawa",
+            "latitude": 6.84,
+            "longitude": 79.96
+        },
+        {
+            "name": "Homagama",
+            "latitude": 6.84,
+            "longitude": 80.00
+        },
+        {
+            "name": "Avissawella",
+            "latitude": 6.95,
+            "longitude": 80.21
+        },
+        {
+            "name": "Ratnapura",
+            "latitude": 6.68,
+            "longitude": 80.40
+        },
+        {
+            "name": "Kegalle",
+            "latitude": 7.25,
+            "longitude": 80.35
+        },
+        {
+            "name": "Kandy",
+            "latitude": 7.29,
+            "longitude": 80.64
+        },
+        {
+            "name": "Gampaha",
+            "latitude": 7.09,
+            "longitude": 80.00
+        }
+    ],
+    "roads": [
+        {
+            "from": "Colombo",
+            "to": "Kaduwela",
+            "distance": 16
+        },
+        {
+            "from": "Colombo",
+            "to": "Kottawa",
+            "distance": 21
+        },
+        {
+            "from": "Colombo",
+            "to": "Gampaha",
+            "distance": 28
+        },
+        {
+            "from": "Kaduwela",
+            "to": "Malabe",
+            "distance": 8
+        },
+        {
+            "from": "Kaduwela",
+            "to": "Avissawella",
+            "distance": 35
+        },
+        {
+            "from": "Malabe",
+            "to": "Kottawa",
+            "distance": 12
+        },
+        {
+            "from": "Kottawa",
+            "to": "Homagama",
+            "distance": 7
+        },
+        {
+            "from": "Homagama",
+            "to": "Avissawella",
+            "distance": 32
+        },
+        {
+            "from": "Avissawella",
+            "to": "Ratnapura",
+            "distance": 44
+        },
+        {
+            "from": "Avissawella",
+            "to": "Kegalle",
+            "distance": 40
+        },
+        {
+            "from": "Gampaha",
+            "to": "Kegalle",
+            "distance": 55
+        },
+        {
+            "from": "Kegalle",
+            "to": "Kandy",
+            "distance": 42
+        },
+        {
+            "from": "Ratnapura",
+            "to": "Kandy",
+            "distance": 92
+        }
+    ]
+}

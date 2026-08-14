@@ -124,3 +124,39 @@ class Graph:
             raise ValueError(f"Coordinates not stored for town: {town}")
 
         return self._coordinates[town]
+
+    def validate(self) -> None:
+        """Raise an error if the graph's internal state is inconsistent."""
+
+        for town, neighbours in self._adjacency.items():
+            if town in neighbours:
+                raise ValueError(
+                    f"Self-loop found for town: {town}"
+                )
+
+            for neighbour, distance in neighbours.items():
+                if neighbour not in self._adjacency:
+                    raise ValueError(
+                        f"Unknown neighbour {neighbour} stored for {town}."
+                    )
+
+                if distance <= 0:
+                    raise ValueError(
+                        f"Invalid distance between {town} and {neighbour}."
+                    )
+
+                reverse_distance = self._adjacency[
+                    neighbour
+                ].get(town)
+
+                if reverse_distance is None:
+                    raise ValueError(
+                        f"Road from {town} to {neighbour} "
+                        "is missing its reverse connection."
+                    )
+
+                if reverse_distance != distance:
+                    raise ValueError(
+                        f"Road distances disagree between "
+                        f"{town} and {neighbour}."
+                    )

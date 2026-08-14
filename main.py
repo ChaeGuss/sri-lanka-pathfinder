@@ -1,31 +1,18 @@
-from data.sample_network import build_sample_graph
-from services.pathfinder import compare_algorithms
-from utils.display import print_search_result
+
+from data.network_loader import load_network
+from pathlib import Path
 
 
 def main() -> None:
     """Run the Sri Lanka pathfinding application."""
-    graph = build_sample_graph()
+    PROJECT_ROOT = Path(__file__).resolve().parent
 
-    start = "Colombo"
-    goal = "Kandy"
+    NETWORK_FILE = (PROJECT_ROOT / "data" / "sample_network.json")
+    graph = load_network(NETWORK_FILE)
 
-    results = compare_algorithms(
-        graph,
-        start,
-        goal,
-    )
-
-    print(
-        f"Route comparison: {start} -> {goal}"
-    )
-
-    for algorithm_name, result in results.items():
-        print_search_result(
-            algorithm_name,
-            graph,
-            result,
-        )
+    print(graph)
+    print(graph.get_towns())
+    print(graph.get_neighbours("Colombo"))
 
 
 if __name__ == "__main__":

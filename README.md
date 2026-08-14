@@ -93,10 +93,21 @@ utils/
     shared presentation/geographic helpers
 
 data/
-    sample network
+    sample network JSON - contains towns
+                                      name
+                                      latitude
+                                      longitude
+
+                                  roads
+                                      from
+                                      to
+                                      distance
+    network loader - deserializes JSON file and constructs the Graph
 
 tests/
     automated correctness checks
+
+
 
 ## Running the project
 
