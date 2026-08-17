@@ -35,3 +35,32 @@ def test_osm_node_coordinates_are_loaded() -> None:
         79.8612,
     )
 
+def test_two_way_osm_road_creates_both_directions() -> None:
+    graph = load_osm_style_network(
+        "data/raw_osm_sample.json"
+    )
+
+    assert graph.has_road(
+        "1001",
+        "1002",
+    )
+
+    assert graph.has_road(
+        "1002",
+        "1001",
+    )
+
+def test_oneway_osm_road_only_creates_forward_edge() -> None:
+    graph = load_osm_style_network(
+        "data/raw_osm_sample.json"
+    )
+
+    assert graph.has_road(
+        "1003",
+        "1004",
+    )
+
+    assert not graph.has_road(
+        "1004",
+        "1003",
+    )

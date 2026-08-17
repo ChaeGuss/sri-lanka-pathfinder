@@ -175,3 +175,117 @@ def test_sample_graph_towns_have_coordinates() -> None:
 
     for town in graph.get_towns():
         assert graph.has_coordinates(town)
+
+def test_graph_is_undirected_by_default() -> None:
+    graph = Graph()
+
+    assert not graph.is_directed()
+
+def test_graph_can_be_directed() -> None:
+    graph = Graph(
+        directed=True
+    )
+
+    assert graph.is_directed()
+
+def test_directed_road_only_adds_forward_edge() -> None:
+    graph = Graph(
+        directed=True
+    )
+
+    graph.add_town("A")
+    graph.add_town("B")
+
+    graph.add_road(
+        "A",
+        "B",
+        5,
+    )
+
+    assert graph.has_road(
+        "A",
+        "B",
+    )
+
+    assert not graph.has_road(
+        "B",
+        "A",
+    )
+
+def test_undirected_road_adds_both_directions() -> None:
+    graph = Graph()
+
+    graph.add_town("A")
+    graph.add_town("B")
+
+    graph.add_road(
+        "A",
+        "B",
+        5,
+    )
+
+    assert graph.has_road(
+        "A",
+        "B",
+    )
+
+    assert graph.has_road(
+        "B",
+        "A",
+    )
+
+def test_directed_road_count() -> None:
+    graph = Graph(
+        directed=True
+    )
+
+    graph.add_town("A")
+    graph.add_town("B")
+
+    graph.add_road(
+        "A",
+        "B",
+        5,
+    )
+
+    assert graph.road_count() == 1
+
+def test_two_directed_edges_count_separately() -> None:
+    graph = Graph(
+        directed=True
+    )
+
+    graph.add_town("A")
+    graph.add_town("B")
+
+    graph.add_road(
+        "A",
+        "B",
+        5,
+    )
+
+    graph.add_road(
+        "B",
+        "A",
+        5,
+    )
+
+    assert graph.road_count() == 2
+
+def test_directed_graph_validates_without_reverse_edge() -> None:
+    graph = Graph(
+        directed=True
+    )
+
+    graph.add_town("A")
+    graph.add_town("B")
+
+    graph.add_road(
+        "A",
+        "B",
+        5,
+    )
+
+    graph.validate()
+
+    

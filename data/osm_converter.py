@@ -29,7 +29,7 @@ def load_osm_style_network(file_path: str | Path,) -> Graph:
     if not isinstance(data["ways"], list):
         raise ValueError("'ways' must be a list.")
 
-    graph = Graph()
+    graph = Graph(directed=True)
 
     node_lookup = {}
 
@@ -83,6 +83,33 @@ def load_osm_style_network(file_path: str | Path,) -> Graph:
 
             graph.add_road(town_a, town_b, distance, )
 
+            direction = _get_oneway_direction(tags)
+
+            if direction in {"forward", "both", }:
+                if not graph.has_road(town_a, town_b,):
+                    graph.add_road(town_a, town_b, distance, )
+
+            if direction in {"reverse", "both"}:
+                if not graph.has_road(town_b, town_a, ):
+                    graph.add_road(town_b, town_a, distance, )
+
     graph.validate()
 
     return graph
+
+def _get_oneway_direction(tags: dict,) -> str:
+    """Return the simplified direction of an OSM-style way."""
+
+    value = str(
+        tags.get(
+            "oneway",
+            "no",
+        )).lower()
+
+    if value in {"yes", "true", "1",}:
+        return "forward"
+
+    if value == "-1":
+        return "reverse"
+
+    return "both"

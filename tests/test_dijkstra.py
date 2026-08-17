@@ -169,3 +169,47 @@ def test_reconstruct_path_from_parents() -> None:
         "Kegalle",
         "Kandy",
     ]
+
+def test_dijkstra_respects_directed_roads() -> None:
+    graph = Graph(
+        directed=True
+    )
+
+    for town in [
+        "A",
+        "B",
+        "C",
+    ]:
+        graph.add_town(town)
+
+    graph.add_road(
+        "A",
+        "B",
+        5,
+    )
+
+    graph.add_road(
+        "B",
+        "C",
+        5,
+    )
+
+    forward = dijkstra(
+        graph,
+        "A",
+        "C",
+    )
+
+    reverse = dijkstra(
+        graph,
+        "C",
+        "A",
+    )
+
+    assert forward.path == [
+        "A",
+        "B",
+        "C",
+    ]
+
+    assert reverse.path is None

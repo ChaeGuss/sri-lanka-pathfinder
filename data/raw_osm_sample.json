@@ -19,16 +19,28 @@
 
   "ways": [
     {
-      "id": 5001,
-      "nodes": [
-        1001,
-        1002,
-        1003
-      ],
-      "tags": {
-        "highway": "primary",
-        "name": "Sample Road"
-      }
+        "id": 5001,
+        "nodes": [
+            1001,
+            1002,
+            1003
+        ],
+        "tags": {
+            "highway": "primary",
+            "name": "Sample Road"
+        }
+    },
+    {
+        "id": 5002,
+        "nodes": [
+            1003,
+            1004
+        ],
+        "tags": {
+            "highway": "primary",
+            "name": "One Way Road",
+            "oneway": "yes"
+        }
     }
   ]
 }

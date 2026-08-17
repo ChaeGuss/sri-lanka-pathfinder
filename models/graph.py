@@ -1,10 +1,19 @@
 class Graph:
     """Represent an undirected, weighted graph of towns and roads."""
 
-    def __init__(self) -> None:
+    def __init__(self, directed: bool = False) -> None:
         """Create an empty graph."""
-        self._adjacency: dict[str, dict[str, float]] = {}
-        self._coordinates: dict[str, tuple[float, float]] = {}
+
+        if not isinstance(directed, bool):
+            raise TypeError("directed must be a boolean")
+        
+        self._directed = directed
+        self._adjacency: dict[str, dict[str, float], ] = {}
+        self._coordinates: dict[str, tuple[float, float], ] = {}
+
+    def is_directed(self) -> bool:
+        """Return whether the graph is directed"""
+        return self._directed
 
     def add_town(self, town: str) -> None:
         """Add a town to the graph."""
@@ -58,7 +67,9 @@ class Graph:
         numeric_distance = float(distance)
 
         self._adjacency[town_a][town_b] = numeric_distance
-        self._adjacency[town_b][town_a] = numeric_distance
+
+        if not self._directed:
+            self._adjacency[town_b][town_a] = (numeric_distance)
 
     def get_neighbours(self, town: str) -> dict[str, float]:
         """Return a copy of a town's neighbours and road distances"""
@@ -83,8 +94,11 @@ class Graph:
         return self._adjacency[town_a][town_b]
 
     def road_count(self) -> int:
-        """Return the number of undirected roads in the graph"""
+        """Return the number of roads in the graph"""
         neighbour_entries = sum(len(neighbours) for neighbours in self._adjacency.values())
+
+        if self._directed:
+            return neighbour_entries
 
         return neighbour_entries // 2
 
@@ -126,28 +140,37 @@ class Graph:
         return self._coordinates[town]
 
     def validate(self) -> None:
-        """Raise an error if the graph's internal state is inconsistent."""
+        """Raise an error if the graph is internally inconsistent."""
 
         for town, neighbours in self._adjacency.items():
+
             if town in neighbours:
                 raise ValueError(
                     f"Self-loop found for town: {town}"
                 )
 
             for neighbour, distance in neighbours.items():
+
                 if neighbour not in self._adjacency:
                     raise ValueError(
-                        f"Unknown neighbour {neighbour} stored for {town}."
+                        f"Unknown neighbour "
+                        f"{neighbour} stored for {town}."
                     )
 
                 if distance <= 0:
                     raise ValueError(
-                        f"Invalid distance between {town} and {neighbour}."
+                        f"Invalid distance between "
+                        f"{town} and {neighbour}."
                     )
 
-                reverse_distance = self._adjacency[
-                    neighbour
-                ].get(town)
+                if self._directed:
+                    continue
+
+                reverse_distance = (
+                    self._adjacency[
+                        neighbour
+                    ].get(town)
+                )
 
                 if reverse_distance is None:
                     raise ValueError(

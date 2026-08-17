@@ -84,3 +84,36 @@ def test_bfs_start_equals_goal() -> None:
 
     assert result.path == ["Colombo"]
     assert result.explored_nodes == 1
+
+def test_bfs_respects_directed_roads() -> None:
+    graph = Graph(
+        directed=True
+    )
+
+    graph.add_town("A")
+    graph.add_town("B")
+
+    graph.add_road(
+        "A",
+        "B",
+        1,
+    )
+
+    forward = bfs(
+        graph,
+        "A",
+        "B",
+    )
+
+    reverse = bfs(
+        graph,
+        "B",
+        "A",
+    )
+
+    assert forward.path == [
+        "A",
+        "B",
+    ]
+
+    assert reverse.path is None

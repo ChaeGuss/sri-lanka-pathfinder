@@ -9,6 +9,12 @@ The locations are real Sri Lankan towns, but the connections and distances
 are simplified learning data and must not be treated as real navigation
 information.
 
+##
+
+Graph class now supports:
+    undirected sample-town networks
+    directed road-routing networks
+
 ## Nodes
 
 | ID | Town        |

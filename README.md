@@ -12,6 +12,13 @@ Implementing A* search and comparing BFS, Dijkstra, and A* behaviour.
 - `docs/road-network-design.md`: defines the initial graph model and sample
   road network.
 
+The Graph model now supports both undirected and directed graphs.
+
+The human-friendly sample town network remains undirected.
+
+OSM-style converted road networks are directed so that one-way roads can
+be represented.
+
 ## Project structure
 
 - `models/graph.py`: core undirected weighted graph structure
