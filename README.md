@@ -104,8 +104,23 @@ data/
                                       distance
     network loader - deserializes JSON file and constructs the Graph
 
+    raw_osm_sample.json - To teach how external road data is transformed into the application's graph model
+
 tests/
     automated correctness checks
+
+
+OpenStreetMap-style data
+           │
+           ▼
+      OSM converter
+           │
+           ▼
+          Graph
+           │
+    ┌──────┼──────┐
+    ▼      ▼      ▼
+   BFS  Dijkstra   A*
 
 
 
