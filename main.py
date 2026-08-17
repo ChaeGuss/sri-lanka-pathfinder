@@ -1,18 +1,11 @@
-
-from data.network_loader import load_network
-from pathlib import Path
+from cli.app import run_cli
 
 
 def main() -> None:
-    """Run the Sri Lanka pathfinding application."""
-    PROJECT_ROOT = Path(__file__).resolve().parent
-
-    NETWORK_FILE = (PROJECT_ROOT / "data" / "sample_network.json")
-    graph = load_network(NETWORK_FILE)
-
-    print(graph)
-    print(graph.get_towns())
-    print(graph.get_neighbours("Colombo"))
+    """Run the Sri Lanka Pathfinder CLI."""
+    try:
+        run_cli() 
+    except KeyboardInterrupt: print ("\nApplication cancelled.") #Incase user press Ctrl+C
 
 
 if __name__ == "__main__":

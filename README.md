@@ -114,6 +114,12 @@ tests/
 ```bash
 python main.py
 
+1. Select a start town.
+2. Select a destination.
+3. Choose BFS, Dijkstra, A*, or comparison mode.
+4. Review route, distance, edge count, and explored nodes.
+5. Choose whether to run another search.
+
 ## Testing
 
 The project uses pytest for automated testing.
