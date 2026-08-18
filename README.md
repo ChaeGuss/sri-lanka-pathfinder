@@ -19,6 +19,15 @@ The human-friendly sample town network remains undirected.
 OSM-style converted road networks are directed so that one-way roads can
 be represented.
 
+Each graph connection is now represented by an Edge object.
+
+An Edge currently stores:
+
+- distance
+- optional OSM way ID
+- optional road name
+- optional highway type
+
 ## Project structure
 
 - `models/graph.py`: core undirected weighted graph structure

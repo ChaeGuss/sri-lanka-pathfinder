@@ -15,6 +15,10 @@ Graph class now supports:
     undirected sample-town networks
     directed road-routing networks
 
+Multiple edges between the same pair of nodes are allowed.
+Each edge must have a positive distance.
+An undirected road is represented by matching edge entries in both directions.
+
 ## Nodes
 
 | ID | Town        |

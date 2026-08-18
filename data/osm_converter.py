@@ -49,6 +49,18 @@ def load_osm_style_network(file_path: str | Path,) -> Graph:
     for way_data in data["ways"]:
         tags = way_data.get("tags", {} )
 
+        way_id = str(
+            way_data["id"]
+        )
+
+        road_name = tags.get(
+            "name"
+        )
+
+        highway_type = tags.get(
+            "highway"
+)
+
         if "highway" not in tags:
             continue
 
@@ -81,17 +93,17 @@ def load_osm_style_network(file_path: str | Path,) -> Graph:
             if graph.has_road(town_a,town_b,):
                 continue
 
-            graph.add_road(town_a, town_b, distance, )
+            graph.add_road(town_a, town_b, distance, way_id=way_id, name=road_name, highway_type=highway_type)
 
             direction = _get_oneway_direction(tags)
 
             if direction in {"forward", "both", }:
                 if not graph.has_road(town_a, town_b,):
-                    graph.add_road(town_a, town_b, distance, )
+                    graph.add_road(town_a, town_b, distance, way_id=way_id, name=road_name, highway_type=highway_type)
 
             if direction in {"reverse", "both"}:
                 if not graph.has_road(town_b, town_a, ):
-                    graph.add_road(town_b, town_a, distance, )
+                    graph.add_road(town_b, town_a, distance, way_id=way_id, name=road_name, highway_type=highway_type)
 
     graph.validate()
 

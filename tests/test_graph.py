@@ -78,16 +78,30 @@ def test_undirected_road_is_counted_once() -> None:
 
     assert graph.road_count() == 1
 
-def test_duplicate_road_is_rejected() -> None:
+def test_parallel_roads_are_allowed() -> None:
     graph = Graph()
 
     graph.add_town("Colombo")
     graph.add_town("Kaduwela")
 
-    graph.add_road("Colombo", "Kaduwela", 16)
+    graph.add_road(
+        "Colombo",
+        "Kaduwela",
+        16,
+    )
 
-    with pytest.raises(ValueError):
-        graph.add_road("Colombo", "Kaduwela", 16)
+    graph.add_road(
+        "Colombo",
+        "Kaduwela",
+        18,
+    )
+
+    edges = graph.get_edges(
+        "Colombo",
+        "Kaduwela",
+    )
+
+    assert len(edges) == 2
 
 def test_sample_graph_has_expected_size() -> None:
     graph = build_sample_graph()
@@ -288,4 +302,112 @@ def test_directed_graph_validates_without_reverse_edge() -> None:
 
     graph.validate()
 
-    
+def test_get_neighbours_returns_independent_edge_lists() -> None:
+    graph = Graph(
+        directed=True
+    )
+
+    graph.add_town("A")
+    graph.add_town("B")
+
+    graph.add_road(
+        "A",
+        "B",
+        5,
+    )
+
+    neighbours = graph.get_neighbours(
+        "A"
+    )
+
+    neighbours["B"].clear()
+
+    assert graph.has_road(
+        "A",
+        "B",
+    )    
+
+def test_directed_graph_supports_parallel_edges() -> None:
+    graph = Graph(
+        directed=True
+    )
+
+    graph.add_town("A")
+    graph.add_town("B")
+
+    graph.add_road(
+        "A",
+        "B",
+        5,
+    )
+
+    graph.add_road(
+        "A",
+        "B",
+        7,
+    )
+
+    edges = graph.get_edges(
+        "A",
+        "B",
+    )
+
+    assert len(edges) == 2
+
+    assert graph.road_count() == 2
+
+def test_edge_metadata_is_stored() -> None:
+    graph = Graph(
+        directed=True
+    )
+
+    graph.add_town("A")
+    graph.add_town("B")
+
+    graph.add_road(
+        "A",
+        "B",
+        5,
+        way_id="5001",
+        name="Main Street",
+        highway_type="primary",
+    )
+
+    edges = graph.get_edges(
+        "A",
+        "B",
+    )
+
+    assert len(edges) == 1
+
+    edge = edges[0]
+
+    assert edge.distance == 5.0
+    assert edge.way_id == "5001"
+    assert edge.name == "Main Street"
+    assert edge.highway_type == "primary"
+
+def test_get_distance_returns_minimum_parallel_edge() -> None:
+    graph = Graph(
+        directed=True
+    )
+
+    graph.add_town("A")
+    graph.add_town("B")
+
+    graph.add_road(
+        "A",
+        "B",
+        9,
+    )
+
+    graph.add_road(
+        "A",
+        "B",
+        4,
+    )
+
+    assert graph.get_distance(
+        "A",
+        "B",
+    ) == 4.0

@@ -213,3 +213,50 @@ def test_dijkstra_respects_directed_roads() -> None:
     ]
 
     assert reverse.path is None
+
+def test_dijkstra_uses_cheapest_parallel_edge() -> None:
+    graph = Graph(
+        directed=True
+    )
+
+    for town in [
+        "A",
+        "B",
+        "C",
+    ]:
+        graph.add_town(town)
+
+    graph.add_road(
+        "A",
+        "B",
+        10,
+    )
+
+    graph.add_road(
+        "A",
+        "B",
+        3,
+    )
+
+    graph.add_road(
+        "B",
+        "C",
+        2,
+    )
+
+    result = dijkstra(
+        graph,
+        "A",
+        "C",
+    )
+
+    assert result.path == [
+        "A",
+        "B",
+        "C",
+    ]
+
+    assert path_distance(
+        graph,
+        result.path,
+    ) == 5.0

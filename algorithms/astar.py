@@ -54,22 +54,42 @@ def astar(graph: Graph, start: str, goal: str, ) -> SearchResults:
         if current == goal:
             return SearchResults(path=reconstruct_path(parents, goal,), explored_nodes=explored_nodes)
 
-        for neighbour, road_distance in graph.get_neighbours(current).items():
+        for neighbour, edges in graph.get_neighbours(current).items():
 
             if not graph.has_coordinates(neighbour):
-                raise ValueError(f"No coordinates stored for town: {neighbour}")
+                raise ValueError(
+                    f"No coordinates stored for town: {neighbour}"
+                )
 
-            candidate_g = (g_scores[current] + road_distance)
+            for edge in edges:
+                candidate_g = (
+                    g_scores[current]
+                    + edge.distance
+                )
 
-            if candidate_g < g_scores[neighbour]:
-                g_scores[neighbour] = candidate_g
-                parents[neighbour] = current
+                if candidate_g < g_scores[neighbour]:
+                    g_scores[neighbour] = candidate_g
+                    parents[neighbour] = current
 
-                h_score = _heuristic(graph, neighbour, goal, )     #estimated remaining geographic distance
+                    h_score = _heuristic(
+                        graph,
+                        neighbour,
+                        goal,
+                    )
 
-                f_score = candidate_g + h_score
+                    f_score = (
+                        candidate_g
+                        + h_score
+                    )
 
-                heapq.heappush(priority_queue, (f_score, candidate_g, neighbour,), )
+                    heapq.heappush(
+                        priority_queue,
+                        (
+                            f_score,
+                            candidate_g,
+                            neighbour,
+                        ),
+                    )
 
     return SearchResults(path=None, explored_nodes=explored_nodes,)
 

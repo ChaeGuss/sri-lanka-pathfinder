@@ -48,9 +48,7 @@ def test_geographic_distance_does_not_exceed_direct_road_distance() -> None:
             town
         )
 
-        for neighbour, road_distance in graph.get_neighbours(
-            town
-        ).items():
+        for neighbour, edges in graph.get_neighbours(town).items():
             neighbour_coordinates = graph.get_coordinates(
                 neighbour
             )
@@ -60,7 +58,8 @@ def test_geographic_distance_does_not_exceed_direct_road_distance() -> None:
                 neighbour_coordinates,
             )
 
-            assert estimate <= road_distance
+            for edge in edges:
+                assert estimate <= edge.distance
 
 def test_sample_coordinates_are_valid() -> None:
     graph = build_sample_graph()

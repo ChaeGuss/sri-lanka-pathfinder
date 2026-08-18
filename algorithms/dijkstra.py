@@ -46,14 +46,31 @@ def dijkstra(graph: Graph, start: str, goal: str, ) -> SearchResults:
         if current == goal:
             return SearchResults(path=reconstruct_path(parents, goal,), explored_nodes=explored_nodes, )
 
-        for neighbour, road_distance in graph.get_neighbours(current).items():
-            candidate_distance = (current_distance + road_distance)   # calculate the distance to the neighbour through the current town
+        for neighbour, edges in graph.get_neighbours(current).items():
 
-            if candidate_distance < distances[neighbour]:
-                distances[neighbour] = candidate_distance
-                parents[neighbour] = current
+            for edge in edges:
+                candidate_distance = (
+                    current_distance
+                    + edge.distance
+                )
 
-                heapq.heappush(priority_queue, (candidate_distance, neighbour))
+                if (
+                    candidate_distance
+                    < distances[neighbour]
+                ):
+                    distances[neighbour] = (
+                        candidate_distance
+                    )
+
+                    parents[neighbour] = current
+
+                    heapq.heappush(
+                        priority_queue,
+                        (
+                            candidate_distance,
+                            neighbour,
+                        ),
+                    )
 
     return SearchResults(path=None, explored_nodes=explored_nodes,)
 

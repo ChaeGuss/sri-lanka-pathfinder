@@ -1,3 +1,5 @@
+from models.edge import Edge
+
 class Graph:
     """Represent an undirected, weighted graph of towns and roads."""
 
@@ -8,7 +10,7 @@ class Graph:
             raise TypeError("directed must be a boolean")
         
         self._directed = directed
-        self._adjacency: dict[str, dict[str, float], ] = {}
+        self._adjacency: dict[str, dict[str, list[Edge]], ] = {}
         self._coordinates: dict[str, tuple[float, float], ] = {}
 
     def is_directed(self) -> bool:
@@ -47,7 +49,8 @@ class Graph:
         if town not in self._adjacency:
             raise ValueError(f"Unknown town: {town}")
 
-    def add_road(self, town_a: str, town_b: str, distance: float) -> None:
+    def add_road(self, town_a: str, town_b: str, distance: float, *,
+                 way_id: str | None = None, name: str | None = None, highway_type: str | None = None,) -> None:
         """Add an undirected weighted road between two existing towns"""
         self._require_town(town_a)
         self._require_town(town_b)
@@ -61,20 +64,26 @@ class Graph:
         if distance <= 0:
             raise ValueError("Road distance must be greater than 0")
 
-        if town_b in self._adjacency[town_a]:
-            raise ValueError(f"Road already exists between {town_a} and {town_b}")
+        edge = Edge(distance=float(distance), way_id=way_id, name=name, highway_type=highway_type,)
 
-        numeric_distance = float(distance)
-
-        self._adjacency[town_a][town_b] = numeric_distance
+        self._add_directed_edge(town_a, town_b, edge, )
 
         if not self._directed:
-            self._adjacency[town_b][town_a] = (numeric_distance)
+            reverse_edge = Edge(distance=float(distance), way_id=way_id, name=name, highway_type=highway_type,)
 
-    def get_neighbours(self, town: str) -> dict[str, float]:
+            self._add_directed_edge(town_b, town_a, reverse_edge, )
+
+    def _add_directed_edge(self, town_a: str, town_b: str, edge: Edge, ) -> None:
+        if town_b not in self._adjacency[town_a]:
+            self._adjacency[town_a][town_b] = []
+
+        self._adjacency[town_a][town_b].append(edge)
+
+    def get_neighbours(self, town: str) -> dict[str, list[Edge]]:
         """Return a copy of a town's neighbours and road distances"""
         self._require_town(town)
-        return self._adjacency[town].copy()
+        return {neighbour: edges.copy()
+                for neighbour, edges in self._adjacency[town].items()}
 
     def has_road(self, town_a: str, town_b: str) -> bool:
         """Return whether a direct road exists between two towns"""
@@ -84,23 +93,39 @@ class Graph:
         return town_b in self._adjacency[town_a]
 
     def get_distance(self, town_a: str, town_b: str) -> float:
-        """Return the distance of the direct road between the two towns"""
+        """Return the distance"""
         self._require_town(town_a)
         self._require_town(town_b)
 
-        if town_b not in self._adjacency[town_a]:
-            raise ValueError(f"No direct road exists between {town_a} and {town_b}")
+        edges = self._adjacency[town_a].get(town_b)
 
-        return self._adjacency[town_a][town_b]
+        if not edges:
+            raise ValueError(f"No direct road exists from " f"{town_a} to {town_b}")
+
+        return min(edge.distance for edge in edges)
+
+    def get_edges(self, town_a: str, town_b: str, ) -> list[Edge]:
+        """Return all direct edges from one node to another"""
+
+        self._require_town(town_a)
+        self._require_town(town_b)
+
+        edges = self._adjacency[town_a].get(town_b)
+
+        if edges is None:
+            return []
+
+        return edges.copy()
 
     def road_count(self) -> int:
         """Return the number of roads in the graph"""
-        neighbour_entries = sum(len(neighbours) for neighbours in self._adjacency.values())
+        edge_entries = sum(len(edges) for neighbours in self._adjacency.values()
+                                   for edges in neighbours.values())
 
         if self._directed:
-            return neighbour_entries
+            return edge_entries
 
-        return neighbour_entries // 2
+        return edge_entries // 2
 
     def __str__(self) -> str:
         """Return a readble summary of the graph"""
@@ -149,7 +174,7 @@ class Graph:
                     f"Self-loop found for town: {town}"
                 )
 
-            for neighbour, distance in neighbours.items():
+            for neighbour, edges in neighbours.items():
 
                 if neighbour not in self._adjacency:
                     raise ValueError(
@@ -157,28 +182,27 @@ class Graph:
                         f"{neighbour} stored for {town}."
                     )
 
-                if distance <= 0:
-                    raise ValueError(
-                        f"Invalid distance between "
-                        f"{town} and {neighbour}."
-                    )
+                for edge in edges:
+                    if edge.distance <= 0:
+                        raise ValueError(...)
+
+                if not edges:
+                    raise ValueError(f"Empty edge list stored from " f"{town} to {neighbour}")
 
                 if self._directed:
                     continue
 
-                reverse_distance = (
-                    self._adjacency[
-                        neighbour
-                    ].get(town)
+                forward_distances = sorted(edge.distance for edge in edges)
+
+                reverse_edges = self._adjacency[neighbour].get(town)
+
+                if reverse_edges is None:
+                    raise ValueError(...)
+
+                reverse_distances = sorted(edge.distance for edge in reverse_edges
                 )
 
-                if reverse_distance is None:
-                    raise ValueError(
-                        f"Road from {town} to {neighbour} "
-                        "is missing its reverse connection."
-                    )
-
-                if reverse_distance != distance:
+                if forward_distances != reverse_distances:
                     raise ValueError(
                         f"Road distances disagree between "
                         f"{town} and {neighbour}."
